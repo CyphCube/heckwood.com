@@ -39,7 +39,7 @@
       <a href="/podcasts/" class="see-all">See all →</a>
     </div>
     <div class="show-grid">
-      {{ range $slug, $data := hugo.Data.podcasts }}
+      {{ range $slug, $data := .Site.Data.podcasts }}
       <a href="/podcasts/{{ $data.slug }}/" class="show-card">
         <div class="show-art">
           {{ if $data.art }}
@@ -63,7 +63,7 @@
   <div class="container">
     <h2 class="section-title">Recent episodes</h2>
     <div class="ep-list">
-      {{ range $slug, $data := hugo.Data.podcasts }}
+      {{ range $slug, $data := .Site.Data.podcasts }}
         {{ $showName := $data.name }}
         {{ $showSlug := $data.slug }}
         {{ $showArt  := $data.art }}

@@ -2,7 +2,7 @@
 <div class="container">
   <div class="page-head">
     <h1>Podcast Directory</h1>
-    <p>{{ len hugo.Data.podcasts }} curated shows. Every episode has its own page with audio player.</p>
+    <p>{{ len .Site.Data.podcasts }} curated shows. Every episode has its own page with audio player.</p>
   </div>
 
   <div class="filter-bar">
@@ -15,7 +15,7 @@
   </div>
 
   <div class="show-grid show-grid-lg">
-    {{ range $slug, $data := hugo.Data.podcasts }}
+    {{ range $slug, $data := .Site.Data.podcasts }}
     <a href="/podcasts/{{ $data.slug }}/" class="show-card">
       <div class="show-art">
         {{ if $data.art }}

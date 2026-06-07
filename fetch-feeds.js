@@ -42,7 +42,7 @@ const SHOWS = [
   {
     name: "The Daily",
     author: "The New York Times",
-    feed: "https://feeds.simplecast.com/54nAGcIl",
+    feed: "https://feeds.nytimes.com/nyt/podcasts/atThisMoment/rss.xml",
     cat: "news",
     desc: "Twenty minutes on the biggest story of the day with Times journalists, every weekday morning.",
   },
@@ -56,7 +56,7 @@ const SHOWS = [
   {
     name: "Serial",
     author: "Serial Productions",
-    feed: "https://feeds.megaphone.fm/serial",
+    feed: "https://feeds.serialpodcast.org/serialpodcast",
     cat: "crime",
     desc: "Investigative journalism on real-world cases told as gripping serialised stories.",
   },
@@ -70,7 +70,7 @@ const SHOWS = [
   {
     name: "Radiolab",
     author: "WNYC Studios",
-    feed: "https://feeds.wnyc.org/radiolab_podcast",
+    feed: "https://feeds.feedburner.com/radiolab",
     cat: "science",
     desc: "Radiolab explores big questions about human experience through science, philosophy and storytelling.",
   },
@@ -91,7 +91,7 @@ const SHOWS = [
   {
     name: "a16z Podcast",
     author: "Andreessen Horowitz",
-    feed: "https://feeds.simplecast.com/4T39_jAj",
+    feed: "https://feeds.simplecast.com/JGE3yC0V",
     cat: "tech",
     desc: "The a16z Podcast discusses tech and culture trends with industry experts and thinkers.",
   },
@@ -99,6 +99,7 @@ const SHOWS = [
 // ════════════════════════════════════════════════
 
 const parser = new XMLParser({
+  processEntities: false,
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
   cdataPropName: "__cdata",

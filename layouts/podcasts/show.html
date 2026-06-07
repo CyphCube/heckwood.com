@@ -1,7 +1,7 @@
 {{ define "main" }}
 
 {{ $showSlug := .Params.slug }}
-{{ $data := index hugo.Data.podcasts $showSlug }}
+{{ $data := index .Site.Data.podcasts $showSlug }}
 
 <div class="container">
 
