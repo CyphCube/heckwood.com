@@ -327,8 +327,8 @@ function slug(str) {
 function clean(str) {
   if (!str) return "";
   return String(str)
-    .replace(/<[^>]+>/g, " ")
-    // numeric entities: &#038; → "&", &#8211; → "–", &#x2014; → "—"
+    // Decode entities FIRST — feeds often HTML-encode markup as &lt;p&gt;, so
+    // we must turn those back into real tags before stripping them below.
     .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)))
     .replace(/&nbsp;/g, " ")
@@ -340,8 +340,9 @@ function clean(str) {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    // decode &amp; last so we don't double-decode entities like &amp;#038;
     .replace(/&amp;/g, "&")
+    // ...then strip all tags (whether literal or decoded from entities).
+    .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -387,6 +388,27 @@ async function fetchFeed(url) {
   return res.text();
 }
 
+// Apple's podcast artwork CDN (mzstatic) is reliable and hotlink-safe, unlike
+// some publisher-hosted images (which block cross-origin requests). Resolve a
+// show's cover art by name via the iTunes Search API; "" if not found.
+async function itunesArtwork(name) {
+  try {
+    const res = await fetch(
+      "https://itunes.apple.com/search?entity=podcast&limit=3&term=" +
+        encodeURIComponent(name),
+      { signal: AbortSignal.timeout(8000) }
+    );
+    const data = await res.json();
+    const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const results = data.results || [];
+    const m = results.find((r) => norm(r.collectionName) === norm(name)) || results[0];
+    const art = m?.artworkUrl600 || m?.artworkUrl100 || "";
+    return art.replace(/\/\d+x\d+bb\.(jpg|png)/, "/600x600bb.$1");
+  } catch {
+    return "";
+  }
+}
+
 async function processShow(show) {
   const showSlug = slug(show.name);
   console.log(`\n▶ ${show.name} (${showSlug})`);
@@ -416,11 +438,13 @@ async function processShow(show) {
   // Show-level metadata
   const feedTitle = clean(getText(channel.title)) || show.name;
   const feedDesc = clean(getText(channel.description || channel.subtitle)) || show.desc;
-  const feedArt =
+  // Prefer Apple's CDN art (reliable/hotlink-safe); fall back to the feed's own.
+  const fallbackArt =
     channel["itunes:image"]?.["@_href"] ||
     channel.image?.url ||
     channel["itunes:image"] ||
     "";
+  const feedArt = (await itunesArtwork(show.name)) || fallbackArt;
   const feedLink = getText(channel.link) || "";
 
   // Episodes
