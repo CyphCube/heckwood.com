@@ -1,0 +1,13 @@
+name = "heckwood"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+# Cloudflare D1 — app data (favorites + playback history).
+# Create it once with:  npx wrangler d1 create heckwood-db
+# then paste the returned database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "heckwood-db"
+database_id = "2f07d43c-4e6b-4f57-a5c6-06c4392436d9"
+migrations_dir = "migrations"

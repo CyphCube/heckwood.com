@@ -1,16 +1,44 @@
 {
-  "name": "podwave",
-  "version": "1.0.0",
-  "description": "Podcast directory built with Hugo",
+  "name": "heckwood",
+  "version": "2.0.0",
+  "description": "Heckwood — app-like podcast aggregator (Next.js)",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "fetch": "node fetch-feeds.js",
-    "build": "node fetch-feeds.js && hugo --minify",
-    "dev": "node fetch-feeds.js && hugo server"
+    "feeds": "node fetch-feeds.js",
+    "predev": "node fetch-feeds.js || true",
+    "dev": "next dev",
+    "prebuild": "node fetch-feeds.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "pages:build": "node fetch-feeds.js && npx @cloudflare/next-on-pages",
+    "pages:dev": "npx wrangler pages dev .vercel/output/static",
+    "pages:deploy": "npm run pages:build && npx wrangler pages deploy .vercel/output/static",
+    "db:migrate:local": "npx wrangler d1 migrations apply heckwood-db --local",
+    "db:migrate": "npx wrangler d1 migrations apply heckwood-db --remote"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
+    "clsx": "^2.1.1",
     "fast-xml-parser": "^4.3.6",
+    "next": "^15.1.0",
     "node-fetch": "^3.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
     "slugify": "^1.6.6"
   },
-  "type": "module"
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^4.20260623.1",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "wrangler": "^4.103.0"
+  }
 }

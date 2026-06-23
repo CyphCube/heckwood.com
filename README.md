@@ -1,97 +1,70 @@
-# Podwave
+# Heckwood
 
-A SEO-first podcast directory built with Hugo. Every show and episode gets its own static HTML page.
+An app-like podcast aggregator: browse curated shows, follow favorites, and a
+persistent player that keeps playing while you navigate and resumes every
+episode where you left off.
 
-## Project structure
-
-```
-podwave/
-├── fetch-feeds.js        ← fetches RSS feeds, writes Hugo content + data
-├── package.json
-├── hugo.toml             ← Hugo config (update baseURL to your domain)
-├── layouts/
-│   ├── _default/
-│   │   ├── baseof.html   ← base template (header, footer, SEO tags)
-│   │   └── taxonomy.html ← category pages
-│   ├── index.html        ← homepage
-│   └── podcasts/
-│       ├── list.html     ← /podcasts/ directory
-│       ├── show.html     ← /podcasts/show-name/
-│       └── episode.html  ← /podcasts/show-name/episode-title/
-├── static/
-│   ├── css/main.css
-│   └── robots.txt
-└── data/podcasts/        ← auto-generated JSON per show (git-ignored)
-```
+**Stack:** Next.js (App Router) · TypeScript · Tailwind · Clerk (auth) ·
+Cloudflare Pages + D1 (data). Show/episode data is fetched from RSS at build
+time by `fetch-feeds.js` and bundled into the app.
 
 ## Local development
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Install Hugo (macOS)
-brew install hugo
-
-# 3. Fetch RSS feeds + build
-npm run build
-
-# 4. Preview locally
-hugo server
-# → open http://localhost:1313
+npm run dev          # fetches feeds, then starts Next on http://localhost:3000
 ```
 
-## Adding or removing shows
+`npm run dev`/`build` run `fetch-feeds.js` first, which writes
+`data/podcasts/*.json` and the bundled `data/podcasts/_all.js`.
 
-Edit the `SHOWS` array in `fetch-feeds.js`:
+Without any Clerk/D1 configuration the app runs fine in **local-only mode** —
+favorites and listening history are stored in the browser (localStorage). Add
+Clerk + D1 to make them per-account and cross-device.
 
-```js
-const SHOWS = [
-  {
-    name: "My Podcast",
-    author: "Host Name",
-    feed: "https://example.com/feed.xml",  // RSS feed URL
-    cat: "tech",   // tech | science | news | business | crime
-    desc: "Short description for SEO.",
-  },
-  // ...
-];
-```
+## Adding / removing shows
 
-Then run `npm run build` — all pages regenerate automatically.
+Edit the `SHOWS` array in `fetch-feeds.js`, then re-run `npm run feeds`.
 
-## Deploying to Cloudflare Pages
+## Auth — Clerk (Google + Facebook)
 
-1. Push this repo to GitHub
-2. Go to dash.cloudflare.com → Workers & Pages → Create a project
-3. Connect your GitHub repo
-4. Set build settings:
-   - **Build command:** `npm install && npm run build`
-   - **Build output directory:** `public`
-5. Add environment variables:
-   - `HUGO_VERSION` = `0.128.0`
-   - `NODE_VERSION` = `20`
-6. Click Deploy
+1. Create an app at <https://dashboard.clerk.com>.
+2. Enable **Google** and **Facebook** under *User & Authentication → Social
+   Connections*.
+3. Copy `.env.example` to `.env.local` and fill in:
+   ```
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+   CLERK_SECRET_KEY=sk_...
+   ```
+4. Restart `npm run dev`. A **Sign in** button appears in the top bar; signed-in
+   users get a Clerk account menu. (Apple sign-in can be added later — it needs
+   a $99/yr Apple Developer membership.)
 
-Every `git push` auto-deploys.
-
-## SEO features
-
-- Every show: `/podcasts/show-name/` with full meta tags
-- Every episode: `/podcasts/show-name/episode-title/` with Schema.org markup
-- Category pages: `/categories/tech/`, `/categories/science/`, etc.
-- Auto-generated `sitemap.xml` and `robots.txt`
-- Open Graph + Twitter Card tags on every page
-- Breadcrumb navigation on all inner pages
-- Static HTML — no JS required for Google to index content
-
-## Updating content
-
-RSS feeds are fetched at build time. To refresh episode lists:
+## Data — Cloudflare D1
 
 ```bash
-npm run build
-git add -A && git commit -m "update episodes" && git push
+npx wrangler login
+npx wrangler d1 create heckwood-db          # paste the database_id into wrangler.toml
+npm run db:migrate:local                     # apply migrations to the local D1
+npm run db:migrate                           # apply migrations to the remote D1
 ```
 
-Cloudflare Pages will deploy the update automatically.
+The schema lives in `migrations/`. Favorites and history are keyed by the Clerk
+user id; Clerk owns the identity, D1 owns the app data.
+
+## Deploy — Cloudflare Pages
+
+```bash
+npm run pages:build     # fetch feeds → next build → next-on-pages bundle
+npm run pages:deploy    # build + wrangler pages deploy
+```
+
+Or connect the repo in the Cloudflare dashboard with:
+
+- **Build command:** `npm run pages:build`
+- **Build output directory:** `.vercel/output/static`
+- **Compatibility flag:** `nodejs_compat`
+- **Bindings:** D1 database `DB` → `heckwood-db`
+- **Environment variables:** `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
+
+`npm run pages:dev` runs the built bundle locally against a local D1 binding.
