@@ -1,0 +1,11 @@
+name: Refresh podcast feeds
+on:
+  schedule:
+    - cron: "0 9 * * *"   # daily at 09:00 UTC
+  workflow_dispatch: {}
+jobs:
+  trigger-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy hook
+        run: curl -fsS -X POST "${{ secrets.CF_PAGES_DEPLOY_HOOK }}"
