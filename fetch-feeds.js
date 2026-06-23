@@ -10,7 +10,6 @@
  * Or via: npm run build
  */
 
-import fetch from "node-fetch";
 import { XMLParser } from "fast-xml-parser";
 import slugify from "slugify";
 import fs from "fs";
@@ -42,7 +41,7 @@ const SHOWS = [
   {
     name: "The Daily",
     author: "The New York Times",
-    feed: "https://feeds.nytimes.com/nyt/podcasts/atThisMoment/rss.xml",
+    feed: "https://feeds.simplecast.com/Sl5CSM3S",
     cat: "news",
     desc: "Twenty minutes on the biggest story of the day with Times journalists, every weekday morning.",
   },
@@ -56,7 +55,7 @@ const SHOWS = [
   {
     name: "Serial",
     author: "Serial Productions",
-    feed: "https://feeds.serialpodcast.org/serialpodcast",
+    feed: "https://feeds.simplecast.com/PpzWFGhg",
     cat: "crime",
     desc: "Investigative journalism on real-world cases told as gripping serialised stories.",
   },
@@ -167,7 +166,7 @@ async function fetchFeed(url) {
       "User-Agent": "Mozilla/5.0 (compatible; Podwave/1.0)",
       Accept: "application/rss+xml, application/xml, text/xml, */*",
     },
-    timeout: 15000,
+    signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
   return res.text();

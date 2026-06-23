@@ -23,7 +23,6 @@
     "clsx": "^2.1.1",
     "fast-xml-parser": "^4.3.6",
     "next": "^15.1.0",
-    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",
