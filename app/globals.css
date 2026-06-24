@@ -9,7 +9,7 @@
 html,
 body {
   background: theme("colors.ink");
-  color: #f4f1f8;
+  color: #edf2ed;
 }
 
 /* Thin custom scrollbars for the app feel */

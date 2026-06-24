@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
 import { Sidebar } from "@/components/shell/Sidebar";
@@ -16,6 +16,10 @@ export const metadata: Metadata = {
     "A curated podcast app. Browse top shows across tech, science, news, business and true crime — play, favorite, and pick up where you left off.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#1f7a3a",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -23,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-ink text-[#f4f1f8] antialiased">
+      <body className="min-h-screen bg-ink text-[#edf2ed] antialiased">
         <Providers>
           <div className="flex">
             <Sidebar />

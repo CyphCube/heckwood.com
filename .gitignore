@@ -13,7 +13,6 @@ next-env.d.ts
 /data/podcasts/
 
 # hugo (legacy — being replaced by Next.js)
-/public/
 /resources/
 .hugo_build.lock
 

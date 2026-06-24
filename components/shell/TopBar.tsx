@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AccountArea } from "./AccountArea";
+import { Logo } from "@/components/Logo";
 
 export function TopBar() {
   const router = useRouter();
@@ -16,12 +17,8 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-line bg-ink/80 px-4 py-3 backdrop-blur sm:px-6">
-      <Link href="/" className="flex items-center gap-2 md:hidden">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent">
-          <svg viewBox="0 0 24 24" fill="white" width="14" height="14">
-            <path d="M12 3a9 9 0 100 18A9 9 0 0012 3zM9 9a3 3 0 116 0 3 3 0 01-6 0zm-2 9a7 7 0 0114 0H7z" />
-          </svg>
-        </span>
+      <Link href="/" className="flex items-center md:hidden">
+        <Logo size={28} />
       </Link>
 
       <form onSubmit={submit} className="relative max-w-md flex-1">

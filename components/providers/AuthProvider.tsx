@@ -11,7 +11,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (!clerkEnabled) return <>{children}</>;
   return (
     <ClerkProvider
-      appearance={{ variables: { colorPrimary: "#a855f7" } }}
+      appearance={{ variables: { colorPrimary: "#22a14f" } }}
     >
       {children}
     </ClerkProvider>

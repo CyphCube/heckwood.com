@@ -5,14 +5,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Heckwood palette — deep plum + warm accent, app-like dark UI
-        ink: "#0e0b14",
-        surface: "#16121f",
-        elevated: "#1f1a2c",
-        line: "#2a2438",
-        accent: "#a855f7",
-        "accent-soft": "#c084fc",
-        muted: "#9a93a8",
+        // Heckwood palette — charcoal dark UI with the logo's forest green
+        ink: "#0a0d0b",
+        surface: "#12160f",
+        elevated: "#1a201a",
+        line: "#2a322a",
+        accent: "#22a14f",
+        "accent-soft": "#57cf80",
+        brand: "#1f7a3a",
+        cream: "#f4f1e6",
+        muted: "#97a399",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

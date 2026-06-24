@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { Logo } from "@/components/Logo";
 
 const NAV = [
   { href: "/", label: "Home", icon: HomeIcon },
@@ -18,12 +19,8 @@ export function Sidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-surface px-3 py-5 md:flex">
-      <Link href="/" className="mb-6 flex items-center gap-2 px-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-          <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
-            <path d="M12 3a9 9 0 100 18A9 9 0 0012 3zM9 9a3 3 0 116 0 3 3 0 01-6 0zm-2 9a7 7 0 0114 0H7z" />
-          </svg>
-        </span>
+      <Link href="/" className="mb-6 flex items-center gap-2.5 px-2">
+        <Logo size={32} />
         <span className="font-serif text-lg">Heckwood</span>
       </Link>
 

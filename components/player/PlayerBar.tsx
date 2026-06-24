@@ -51,7 +51,7 @@ export function PlayerBar() {
             aria-label="Seek"
             className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-line accent-accent"
             style={{
-              background: `linear-gradient(to right, var(--tw-accent, #a855f7) ${pct}%, #2a2438 ${pct}%)`,
+              background: `linear-gradient(to right, #22a14f ${pct}%, #2a322a ${pct}%)`,
             }}
           />
           <span className="w-10 shrink-0 text-[11px] tabular-nums text-muted">
