@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   },
   description:
     "A curated podcast app. Browse top shows across tech, science, news, business and true crime — play, favorite, and pick up where you left off.",
+  icons: { icon: "/icon.png" },
 };
 
 export const viewport: Viewport = {
