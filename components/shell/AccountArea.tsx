@@ -38,16 +38,21 @@ function AccountMenu() {
     );
   }
 
-  // Explicit client-side sign-out: clears the Clerk session via the FAPI, then
-  // does a hard navigation home. Avoids <UserButton>'s built-in flow, which
-  // POSTs to "/" and 405s on the Cloudflare/edge runtime.
+  // Sign out, then hard-navigate home. clerk.signOut() revokes the session via
+  // the FAPI (fast) but then fires a Next server-action revalidation that POSTs
+  // to "/" — which 405s and HANGS on the Cloudflare/next-on-pages edge runtime.
+  // So we race it against a short timeout and redirect regardless: by then the
+  // session is revoked and the cookie cleared, so the reload lands signed-out.
   const handleSignOut = async () => {
     if (signingOut) return;
     setSigningOut(true);
     try {
-      await clerk.signOut();
+      await Promise.race([
+        clerk.signOut().catch(() => {}),
+        new Promise((resolve) => setTimeout(resolve, 2500)),
+      ]);
     } catch {
-      /* ignore — the hard redirect below guarantees a clean state */
+      /* ignore */
     }
     window.location.href = "/";
   };
