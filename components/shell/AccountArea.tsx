@@ -38,21 +38,25 @@ function AccountMenu() {
     );
   }
 
-  // Sign out, then hard-navigate home. clerk.signOut() revokes the session via
-  // the FAPI (fast) but then fires a Next server-action revalidation that POSTs
-  // to "/" — which 405s and HANGS on the Cloudflare/next-on-pages edge runtime.
-  // So we race it against a short timeout and redirect regardless: by then the
-  // session is revoked and the cookie cleared, so the reload lands signed-out.
+  // Revoke the session directly via the FAPI, then hard-navigate home.
+  // We deliberately avoid clerk.signOut(): it calls setActive(null), which on
+  // @clerk/nextjs fires a server-action revalidation that POSTs to "/" and 405s
+  // on the next-on-pages edge runtime — leaving the session un-revoked.
+  // session.remove() does just the revocation + cookie clear, no server action.
   const handleSignOut = async () => {
     if (signingOut) return;
     setSigningOut(true);
     try {
-      await Promise.race([
-        clerk.signOut().catch(() => {}),
-        new Promise((resolve) => setTimeout(resolve, 2500)),
-      ]);
+      if (clerk.session) {
+        await clerk.session.remove();
+      } else {
+        await Promise.race([
+          clerk.signOut().catch(() => {}),
+          new Promise((resolve) => setTimeout(resolve, 2500)),
+        ]);
+      }
     } catch {
-      /* ignore */
+      /* ignore — the hard redirect still lands on a re-evaluated session */
     }
     window.location.href = "/";
   };
