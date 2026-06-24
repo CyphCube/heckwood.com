@@ -9,7 +9,7 @@ const NAV = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/browse", label: "Browse", icon: GridIcon },
   { href: "/search", label: "Search", icon: SearchIcon },
-  { href: "/library", label: "Your Library", icon: LibraryIcon },
+  { href: "/library", label: "Library", icon: LibraryIcon },
 ];
 
 export function Sidebar() {

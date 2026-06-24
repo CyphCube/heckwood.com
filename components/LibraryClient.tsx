@@ -12,7 +12,7 @@ export function LibraryClient({ catalog }: { catalog: ShowMeta[] }) {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <h1 className="mb-8 font-serif text-3xl">Your Library</h1>
+      <h1 className="mb-8 font-serif text-3xl">Library</h1>
 
       <ContinueListening />
 

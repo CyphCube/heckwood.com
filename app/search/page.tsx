@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getAllShows } from "@/lib/podcasts";
 import { ShowCard } from "@/components/ShowCard";
 import { EpisodeRow } from "@/components/EpisodeRow";
+import { SearchBar } from "@/components/SearchBar";
 
 export const runtime = "edge";
 
@@ -19,11 +20,10 @@ export default async function Search({
 
   if (!query) {
     return (
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-2 font-serif text-3xl">Search</h1>
-        <p className="text-muted">
-          Find shows and episodes — type in the search bar above.
-        </p>
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-4 font-serif text-3xl">Search</h1>
+        <SearchBar />
+        <p className="text-muted">Find shows and episodes — start typing above.</p>
       </div>
     );
   }
@@ -52,6 +52,7 @@ export default async function Search({
 
   return (
     <div className="mx-auto max-w-4xl">
+      <SearchBar initialQuery={q} />
       <h1 className="mb-6 font-serif text-2xl">
         Results for <span className="text-accent-soft">“{q}”</span>
       </h1>
