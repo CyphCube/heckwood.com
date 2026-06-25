@@ -559,7 +559,50 @@ async function processShow(show) {
   );
 
   console.log(`  ✓ data/podcasts/${showSlug}.json written`);
-  return showSlug;
+  return dataObj;
+}
+
+// Episode slugs can collide within a show; the app dedupes them at read time
+// (lib/podcasts.ts). Mirror that here so sitemap URLs match the real routes.
+function dedupeEpisodeSlugs(episodes) {
+  const seen = new Map();
+  return episodes.map((ep) => {
+    const base = ep.slug || "episode";
+    const n = seen.get(base) ?? 0;
+    seen.set(base, n + 1);
+    return { ...ep, slug: n === 0 ? base : `${base}-${n}` };
+  });
+}
+
+// Static sitemap.xml + robots.txt written to public/ at build time.
+function writeSeoFiles(shows) {
+  const BASE = "https://heckwood.com";
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = [
+    `  <url><loc>${BASE}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>`,
+    `  <url><loc>${BASE}/browse</loc><changefreq>daily</changefreq><priority>0.7</priority></url>`,
+  ];
+  for (const show of shows) {
+    urls.push(
+      `  <url><loc>${BASE}/show/${show.slug}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
+    );
+    for (const ep of dedupeEpisodeSlugs(show.episodes || [])) {
+      const lastmod = ep.pubDate || today;
+      urls.push(
+        `  <url><loc>${BASE}/show/${show.slug}/${ep.slug}</loc><lastmod>${lastmod}</lastmod><priority>0.5</priority></url>`
+      );
+    }
+  }
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join(
+    "\n"
+  )}\n</urlset>\n`;
+  fs.mkdirSync("public", { recursive: true });
+  fs.writeFileSync(path.join("public", "sitemap.xml"), xml);
+  console.log(`✓ public/sitemap.xml (${urls.length} URLs)`);
+
+  const robots = `User-agent: *\nAllow: /\nDisallow: /sign-in\nDisallow: /sign-up\nDisallow: /library\n\nSitemap: ${BASE}/sitemap.xml\n`;
+  fs.writeFileSync(path.join("public", "robots.txt"), robots);
+  console.log("✓ public/robots.txt");
 }
 
 // Emit an ESM barrel that statically imports every show's JSON. The Next.js
@@ -584,16 +627,17 @@ export default ALL_SHOWS;
 async function main() {
   console.log("Heckwood — fetching RSS feeds\n" + "=".repeat(40));
 
-  const slugs = [];
+  const shows = [];
   for (const show of SHOWS) {
-    const s = await processShow(show);
-    if (s) slugs.push(s);
+    const data = await processShow(show);
+    if (data) shows.push(data);
   }
 
-  writeBarrel(slugs.sort());
+  writeBarrel(shows.map((s) => s.slug).sort());
+  writeSeoFiles(shows);
 
   console.log("=".repeat(40));
-  console.log(`✓ All feeds processed (${slugs.length} shows).`);
+  console.log(`✓ All feeds processed (${shows.length} shows).`);
 }
 
 main().catch(console.error);

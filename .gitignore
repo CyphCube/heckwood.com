@@ -12,6 +12,10 @@ next-env.d.ts
 # generated podcast data (rebuilt from RSS at build time)
 /data/podcasts/
 
+# generated SEO files (rebuilt from feeds at build time)
+/public/sitemap.xml
+/public/robots.txt
+
 # hugo (legacy — being replaced by Next.js)
 /resources/
 .hugo_build.lock
