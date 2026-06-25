@@ -35,7 +35,8 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
         autoFocus
         placeholder="Search shows and episodes"
         aria-label="Search shows and episodes"
-        className="w-full rounded-full border border-line bg-surface py-3 pl-11 pr-4 text-sm outline-none placeholder:text-muted focus:border-accent"
+        // text-base (16px) prevents iOS from auto-zooming when the field is focused
+        className="w-full rounded-full border border-line bg-surface py-3 pl-11 pr-4 text-base outline-none placeholder:text-muted focus:border-accent"
       />
     </form>
   );
