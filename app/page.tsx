@@ -33,8 +33,9 @@ export default function Home() {
       <div className="mb-8">
         <h1 className="font-serif text-3xl sm:text-4xl">Good listening starts here</h1>
         <p className="mt-2 max-w-xl text-muted">
-          Browse curated shows, follow your favorites, and pick up every episode
-          right where you left off.
+          A curated podcast player for curious listeners. Subscribe to your
+          favorite shows, stream new episodes, and pick up right where you left
+          off — across every device.
         </p>
       </div>
 
