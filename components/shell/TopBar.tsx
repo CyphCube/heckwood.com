@@ -6,7 +6,10 @@ import { Logo } from "@/components/Logo";
 
 export function TopBar() {
   return (
-    <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-line bg-ink/80 px-4 py-3 backdrop-blur sm:px-6">
+    <header
+      className="sticky top-0 z-40 flex items-center gap-3 border-b border-line bg-ink/80 px-4 pb-3 backdrop-blur sm:px-6"
+      style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
+    >
       <Link href="/" className="flex items-center md:hidden">
         <Logo size={28} />
       </Link>
