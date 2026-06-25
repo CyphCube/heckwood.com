@@ -504,7 +504,6 @@ async function processShow(show) {
       const epSlug = slug(title) || `episode-${Date.now()}`;
       const description =
         clean(getText(item["content:encoded"] || item.description || item["itunes:summary"])) || "";
-      const shortDesc = description.slice(0, 300);
       const audioUrl =
         item.enclosure?.["@_url"] ||
         (Array.isArray(item.enclosure) ? item.enclosure[0]?.["@_url"] : "") ||
@@ -521,7 +520,7 @@ async function processShow(show) {
       return {
         slug: epSlug,
         title,
-        description: shortDesc,
+        description,
         audioUrl,
         pubDate,
         duration,
