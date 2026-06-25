@@ -8,6 +8,7 @@ export const runtime = "edge";
 export const metadata: Metadata = {
   title: "Browse",
   description: "Browse every show in the Heckwood podcast directory by category.",
+  alternates: { canonical: "/browse" },
 };
 
 export default async function Browse({

@@ -19,10 +19,18 @@ export async function generateMetadata({
   const found = getEpisode(slug, episode);
   if (!found) return {};
   const { show, episode: ep } = found;
+  const title = ep.title;
+  const description = ep.description?.slice(0, 160) ?? "";
+  const url = `/show/${show.slug}/${ep.slug}`;
+  const images = ([ep.art || show.art].filter(Boolean) as string[]).concat(
+    ep.art || show.art ? [] : ["/og.png"]
+  );
   return {
-    title: ep.title,
-    description: ep.description?.slice(0, 160),
-    openGraph: { images: [ep.art || show.art].filter(Boolean) as string[] },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "article", title, description, url, images },
+    twitter: { card: "summary_large_image", title, description, images },
   };
 }
 
@@ -46,18 +54,33 @@ export default async function EpisodePage({ params }: { params: Params }) {
     "@type": "PodcastEpisode",
     name: ep.title,
     description: ep.description,
+    url: `https://heckwood.com/show/${show.slug}/${ep.slug}`,
+    image: ep.art || show.art || undefined,
     datePublished: ep.pubDate,
     associatedMedia: ep.audioUrl
       ? { "@type": "MediaObject", contentUrl: ep.audioUrl }
       : undefined,
-    partOfSeries: { "@type": "PodcastSeries", name: show.name },
+    partOfSeries: {
+      "@type": "PodcastSeries",
+      name: show.name,
+      url: `https://heckwood.com/show/${show.slug}`,
+    },
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://heckwood.com/" },
+      { "@type": "ListItem", position: 2, name: show.name, item: `https://heckwood.com/show/${show.slug}` },
+      { "@type": "ListItem", position: 3, name: ep.title, item: `https://heckwood.com/show/${show.slug}/${ep.slug}` },
+    ],
   };
 
   return (
     <div className="mx-auto max-w-3xl">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbJsonLd]) }}
       />
 
       <nav className="mb-6 text-sm text-muted">

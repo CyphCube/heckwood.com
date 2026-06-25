@@ -15,6 +15,22 @@ export const metadata: Metadata = {
   },
   description:
     "A curated podcast app. Browse top shows across tech, science, news, business and true crime — play, favorite, and pick up where you left off.",
+  openGraph: {
+    type: "website",
+    siteName: "Heckwood",
+    title: "Heckwood — Podcast Directory",
+    description:
+      "A curated podcast app. Browse top shows across tech, science, news, business and true crime.",
+    url: "/",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Heckwood" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Heckwood — Podcast Directory",
+    description:
+      "A curated podcast app. Browse top shows across tech, science, news, business and true crime.",
+    images: ["/og.png"],
+  },
   manifest: "/manifest.json",
   icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   appleWebApp: {

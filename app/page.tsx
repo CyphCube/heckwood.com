@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import { getCatalog, getCategories } from "@/lib/podcasts";
 import { ShowCard } from "@/components/ShowCard";
 import { ContinueListening } from "@/components/ContinueListening";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Heckwood",
+  url: "https://heckwood.com",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://heckwood.com/search?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
 
 export default function Home() {
   const shows = getCatalog();
@@ -9,6 +26,10 @@ export default function Home() {
 
   return (
     <div className="mx-auto max-w-6xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <div className="mb-8">
         <h1 className="font-serif text-3xl sm:text-4xl">Good listening starts here</h1>
         <p className="mt-2 max-w-xl text-muted">

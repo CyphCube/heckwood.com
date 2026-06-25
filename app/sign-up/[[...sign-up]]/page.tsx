@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SignUp } from "@clerk/nextjs";
 
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+  title: "Sign up",
+  robots: { index: false, follow: false },
+};
 
 export default function SignUpPage() {
   return (

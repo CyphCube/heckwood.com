@@ -22,10 +22,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const show = getShow(slug);
   if (!show) return {};
+  const title = `${show.name} Podcast`;
+  const description = (show.feedDesc?.slice(0, 160) || show.desc) ?? "";
+  const url = `/show/${show.slug}`;
+  const images = show.art ? [show.art] : ["/og.png"];
   return {
-    title: `${show.name} Podcast`,
-    description: show.feedDesc?.slice(0, 160) || show.desc,
-    openGraph: { images: show.art ? [show.art] : [] },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", title, description, url, images },
+    twitter: { card: "summary_large_image", title, description, images },
   };
 }
 
@@ -40,8 +46,32 @@ export default async function ShowPage({
 
   const episodes = show.episodes.slice(0, MAX_EPISODES);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PodcastSeries",
+    name: show.name,
+    description: show.feedDesc || show.desc,
+    url: `https://heckwood.com/show/${show.slug}`,
+    image: show.art || undefined,
+    author: { "@type": "Person", name: show.author },
+    webFeed: show.feed || undefined,
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://heckwood.com/" },
+      { "@type": "ListItem", position: 2, name: "Browse", item: "https://heckwood.com/browse" },
+      { "@type": "ListItem", position: 3, name: show.name, item: `https://heckwood.com/show/${show.slug}` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-4xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbJsonLd]) }}
+      />
       <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end">
         <div className="relative h-44 w-44 shrink-0 overflow-hidden rounded-2xl bg-line">
           {show.art ? (
