@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FavoriteButton } from "./FavoriteButton";
 
 export function ShowCard({
   slug,
@@ -16,7 +15,7 @@ export function ShowCard({
   cat?: string;
 }) {
   return (
-    <div className="group relative">
+    <div>
       <Link
         href={`/show/${slug}`}
         className="block rounded-xl bg-surface p-3 transition hover:bg-elevated"
@@ -41,11 +40,7 @@ export function ShowCard({
           </span>
         ) : null}
       </Link>
-      <div className="absolute right-4 top-4 opacity-0 transition group-hover:opacity-100">
-        <div className="rounded-full bg-ink/70 backdrop-blur">
-          <FavoriteButton showSlug={slug} />
-        </div>
-      </div>
+
     </div>
   );
 }
