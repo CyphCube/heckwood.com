@@ -32,7 +32,7 @@ export function PlayerBar() {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-14 z-50 border-t border-line bg-elevated/95 shadow-player backdrop-blur md:bottom-0">
+    <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-50 border-t border-line bg-elevated/95 shadow-player backdrop-blur md:bottom-0">
       {/* Progress scrubber spans the full width at the very top of the bar */}
       <div className="px-3 pt-2 sm:px-6">
         <div className="flex items-center gap-3">

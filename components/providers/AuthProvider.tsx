@@ -11,6 +11,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (!clerkEnabled) return <>{children}</>;
   return (
     <ClerkProvider
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      signInFallbackRedirectUrl="/"
+      signUpFallbackRedirectUrl="/"
       appearance={{ variables: { colorPrimary: "#22a14f" } }}
     >
       {children}

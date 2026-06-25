@@ -8,17 +8,25 @@ import { PlayerBar } from "@/components/player/PlayerBar";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://heckwood.com"),
+  applicationName: "Heckwood",
   title: {
     default: "Heckwood — Podcast Directory",
     template: "%s — Heckwood",
   },
   description:
     "A curated podcast app. Browse top shows across tech, science, news, business and true crime — play, favorite, and pick up where you left off.",
-  icons: { icon: "/icon.png" },
+  manifest: "/manifest.json",
+  icons: { icon: "/icon.png", apple: "/apple-icon.png" },
+  appleWebApp: {
+    capable: true,
+    title: "Heckwood",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1f7a3a",
+  themeColor: "#0a0d0b",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
