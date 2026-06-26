@@ -52,6 +52,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3D4HKESYWL" />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-3D4HKESYWL');` }} />
+      </head>
       <body className="min-h-screen bg-ink text-[#edf2ed] antialiased">
         <Providers>
           <div className="flex">
